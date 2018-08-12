@@ -1,0 +1,99 @@
+﻿@model MRTWebApp.Models.MRT
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <style>
+        table 
+        {
+            font-family: Arial, sans-serif;
+            width: 100%;
+        }
+
+        td, th {
+            text-align: left;
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+
+        @using (Html.BeginForm())
+        {
+            <table>
+                <tr>
+                    <td>Customer Name:</td>
+                    <td>@Html.TextBoxFor(x => x.Name)</td>
+                </tr>
+                <tr>
+                    <td>Customer NRIC/Passport No:</td>
+                    <td>@Html.TextBoxFor(x => x.Id)</td>
+                </tr>
+                <tr>
+                    <td>Customer email:</td>
+                    <td>@Html.TextBoxFor(x => x.Email)</td>
+                </tr>
+                <tr>
+                    <td>Ticket origin:</td>
+                    <td>
+
+                        @Html.DropDownListFor(x => x.Origin, new[]
+                            {
+                       new SelectListItem() {Text = "Sungai Buloh", Value = "0"},
+                       new SelectListItem() {Text = "Kampung Selamat", Value = "1"},
+                       new SelectListItem() {Text = "Kwasa Damansara", Value = "2"},
+                       new SelectListItem() {Text = "Kwasa Sentral", Value = "3"},
+                       new SelectListItem() {Text = "Kota Damansara", Value = "4"}
+                       }, "Select origin")
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>Ticket destination:</td>
+                    <td>
+                        @Html.DropDownListFor(x => x.Destination, new[]
+                        {
+                       new SelectListItem() {Text = "Sungai Buloh", Value = "0"},
+                       new SelectListItem() {Text = "Kampung Selamat", Value = "1"},
+                       new SelectListItem() {Text = "Kwasa Damansara", Value = "2"},
+                       new SelectListItem() {Text = "Kwasa Sentral", Value = "3"},
+                       new SelectListItem() {Text = "Kota Damansara", Value = "4"}
+                         }, "Select destination")
+                    </td>
+                </tr>
+                <tr>
+                    <td>Ticket quantity:</td>
+                    <td>@Html.TextBoxFor(x => x.Quantity)</td>
+                </tr>
+                <tr>
+                    <td>Ticket type:</td>
+                    <td>
+                        @Html.DropDownListFor(x => x.Discount, new[]
+                        {
+                            new SelectListItem() {Text = "Normal citizen", Value = bool.FalseString},
+                            new SelectListItem() {Text = "Senior citizen", Value = bool.TrueString},
+                            new SelectListItem() {Text = "Disabled citizen", Value = bool.TrueString},
+                            new SelectListItem() {Text = "Students", Value = bool.TrueString}
+                        })
+                    </td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="Buy ticket" /></td>
+                </tr>
+            </table>
+
+
+        }
+    </div>
+
+</body>
+</html>

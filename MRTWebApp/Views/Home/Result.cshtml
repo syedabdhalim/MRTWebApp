@@ -1,0 +1,33 @@
+﻿@model MRTWebApp.Models.MRT
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Result</title>
+</head>
+<body>
+    <p>Origin: @ViewBag.Origin</p>
+    <p>Destination: @ViewBag.Destination</p>
+    <p>Customer Name: @ViewBag.Name</p>
+    <p>Customer Email: @ViewBag.Email</p>
+    <p>Ticket quantity: @ViewBag.Quantity</p>
+
+    @if (Model.Discount == true)
+    {
+        ViewBag.Fare = ViewBag.Fare * ViewBag.Quantity * 0.5;
+    }
+    else
+    {
+        ViewBag.Fare = ViewBag.Fare * ViewBag.Quantity;
+    }
+    <p>Ticket price: @ViewBag.Fare</p>
+
+    @Html.ActionLink("<< Return", null, null, null, new {href= Request.UrlReferrer})
+
+</body>
+</html>
