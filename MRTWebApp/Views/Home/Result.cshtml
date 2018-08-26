@@ -8,6 +8,9 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
+    <style>
+       
+    </style>
     <title>Result</title>
 </head>
 <body>
@@ -19,15 +22,48 @@
 
     @if (Model.Discount == true)
     {
-        ViewBag.Fare = ViewBag.Fare * ViewBag.Quantity * 0.5;
+        ViewBag.Total = ViewBag.Fare * ViewBag.Quantity * 0.5;
     }
     else
     {
-        ViewBag.Fare = ViewBag.Fare * ViewBag.Quantity;
-    }
-    <p>Ticket price: @ViewBag.Fare</p>
+        ViewBag.Total = ViewBag.Fare * ViewBag.Quantity;
 
-    @Html.ActionLink("<< Return", null, null, null, new {href= Request.UrlReferrer})
+    }
+    <p>Ticket price:RM @ViewBag.Total.ToString("0.00")</p>
+
+    @{ try
+        {
+            WebMail.SmtpServer = "smtp.gmail.com";
+            WebMail.SmtpPort = 587;
+            WebMail.EnableSsl = true; WebMail.UserName = "assessmentTestMail";
+            WebMail.Password = "Testing12345";
+            WebMail.From = "assessmentTestMail@gmail.com";
+            WebMail.Send(ViewBag.Email, "MRT ticket purchased notification",
+        "<html><body><h4>Thank you for your purchasing.Below are your transaction descriptions:</h4> " +
+        "<br><br><center><img src='http://4.bp.blogspot.com/-rInXiHWMAIQ/TtwxYFndNLI/AAAAAAAABz4/Gh61C2BXIj0/s1600/mrt-logos.jpeg' width='150' height='75'/><center>" +
+        "<br><table> <tr><td><b>Date of purchased:</b></td><td>" + ViewBag.Datetime + "</td></tr>" +
+        "<tr><td><b>From - To:</b></td><td>" + ViewBag.Origin + " - " + ViewBag.Destination + "</td></tr></table><br><hr witdh=200px>" +
+       " <table cellpadding='10' style ='border:1px solid lightgrey'><tr style='background-color:Gainsboro'><b>Quantity<b><td><b>Passenger's name</b></td><td><b>Ticket Fee</b></td><td><b>Total Fee</b></td></tr>" +
+       "<tr><td>"+ViewBag.Quantity+"</td><td>"+ViewBag.Name+"</td><td>RM"+ViewBag.Fare.ToString("0.00")+"</td><td>RM"+ViewBag.Total.ToString("0.00")+"</td></tr>" +
+       "</table><b>Payment:</b>Received.<br><hr witdh=200px> <br><b>Term and condition applied.</b><br>1.Ticket are not refundable.<br>2.Please show online purchase receipt on boarding.<br>3.All purchase are final.</body></html>"
+
+
+
+        );
+            @:<h4>Thank you for the purchased, @ViewBag.Name! Notification have been sent to <span style="color:cadetblue">@Model.Email</span></h4>
+        }
+        catch (Exception)
+        {
+            @:<b>Sorry - we couldn't send the email to confirm your purchased.</b>
+
+
+        }
+
+    }
+
+    @Html.ActionLink("<< Return", null, null, null, new { href = Request.UrlReferrer })<br>
+
+
 
 </body>
 </html>
