@@ -143,6 +143,9 @@ namespace MRTWebApp.Controllers
 
                 DateTime datetime = DateTime.Now;
                 ViewBag.Datetime = datetime;
+
+                ViewBag.TicketType = mrt.TicketType;
+
                 return View("Result", mrt);
             }
 
@@ -151,6 +154,7 @@ namespace MRTWebApp.Controllers
 
                 return View();
             }
+
         }
     }
 }
