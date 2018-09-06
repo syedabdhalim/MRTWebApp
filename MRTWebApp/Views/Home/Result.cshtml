@@ -1,6 +1,6 @@
 ﻿@model MRTWebApp.Models.MRT
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/Layout.cshtml";
 }
 
 <!DOCTYPE html>
@@ -9,56 +9,81 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <style>
-       
     </style>
     <title>Result</title>
 </head>
 <body>
-    <p>Origin: @ViewBag.Origin</p>
-    <p>Destination: @ViewBag.Destination</p>
-    <p>Customer Name: @ViewBag.Name</p>
-    <p>Customer Email: @ViewBag.Email</p>
-    <p>Ticket quantity: @ViewBag.Quantity</p>
 
-    @if (Model.Discount == true)
-    {
-        ViewBag.Total = ViewBag.Fare * ViewBag.Quantity * 0.5;
-    }
-    else
-    {
-        ViewBag.Total = ViewBag.Fare * ViewBag.Quantity;
 
-    }
-    <p>Ticket price:RM @ViewBag.Total.ToString("0.00")</p>
+    <div id="result">
+        <div style="background-color:lightblue;border-radius:10px;border:2px solid lightskyblue;margin:5px;padding:5px;">
+            <h1>Your purchase details</h1>
+            <p><b>Customer Name:</b> @ViewBag.Name</p>
+            <p><b>Customer Email:</b> @ViewBag.Email</p>
+            <p><b>Origin:</b> @ViewBag.Origin</p>
+            <p><b>Destination:</b> @ViewBag.Destination</p>
+            <p><b>Ticket quantity:</b> @ViewBag.Quantity</p>
+            <p><b>Ticket type:</b> @ViewBag.TicketType</p>
 
-    @{ try
-        {
-            WebMail.SmtpServer = "smtp.gmail.com";
-            WebMail.SmtpPort = 587;
-            WebMail.EnableSsl = true; WebMail.UserName = "assessmentTestMail";
-            WebMail.Password = "Testing12345";
-            WebMail.From = "assessmentTestMail@gmail.com";
-            WebMail.Send(ViewBag.Email, "MRT ticket purchased notification",
-        "<html><body><h4>Thank you for your purchasing.Below are your transaction descriptions:</h4> " +
-        "<br><br><center><img src='http://4.bp.blogspot.com/-rInXiHWMAIQ/TtwxYFndNLI/AAAAAAAABz4/Gh61C2BXIj0/s1600/mrt-logos.jpeg' width='150' height='75'/><center>" +
-        "<br><table> <tr><td><b>Date of purchased:</b></td><td>" + ViewBag.Datetime + "</td></tr>" +
-        "<tr><td><b>From - To:</b></td><td>" + ViewBag.Origin + " - " + ViewBag.Destination + "</td></tr></table><br><hr witdh=200px>" +
-       " <table cellpadding='10' style ='border:1px solid lightgrey'><tr style='background-color:Gainsboro'><b>Quantity<b><td><b>Passenger's name</b></td><td><b>Ticket Fee</b></td><td><b>Total Fee</b></td></tr>" +
-       "<tr><td>"+ViewBag.Quantity+"</td><td>"+ViewBag.Name+"</td><td>RM"+ViewBag.Fare.ToString("0.00")+"</td><td>RM"+ViewBag.Total.ToString("0.00")+"</td></tr>" +
-       "</table><b>Payment:</b>Received.<br><hr witdh=200px> <br><b>Term and condition applied.</b><br>1.Ticket are not refundable.<br>2.Please show online purchase receipt on boarding.<br>3.All purchase are final.</body></html>"
-        );
-            @:<h4>Thank you for the purchased, @ViewBag.Name! Notification have been sent to <span style="color:cadetblue">@Model.Email</span></h4>
+            @if (Model.Discount == true)
+            {
+                ViewBag.Total = ViewBag.Fare * ViewBag.Quantity * 0.5;
+            }
+            else
+            {
+                ViewBag.Total = ViewBag.Fare * ViewBag.Quantity;
+            }
+            @if (Model.TicketType == "Return ticket")
+            {
+                ViewBag.Total = ViewBag.Total * 2;
+            }
+            @if (ViewBag.TicketType == "Return ticket")
+            {
+                ViewBag.DisplayReturn = ViewBag.Destination + " - " + ViewBag.Origin;
+            }
+            else
+            {
+                ViewBag.DisplayReturn = "-";
+
+
+            }
+
+
+            <p><b>Ticket price:RM</b> @ViewBag.Total.ToString("0.00")</p>
+        </div>
+
+        @{ try
+            {
+                WebMail.SmtpServer = "smtp.gmail.com";
+                WebMail.SmtpPort = 587;
+                WebMail.EnableSsl = true; WebMail.UserName = "assessmentTestMail";
+                WebMail.Password = "Testing12345";
+                WebMail.From = "assessmentTestMail@gmail.com";
+                WebMail.Send(ViewBag.Email, "MRT ticket purchased notification",
+
+            "<html><body><h4>Thank you for your purchasing.Below are your transaction descriptions:</h4> " +
+            "<br><br><center><img src='http://4.bp.blogspot.com/-rInXiHWMAIQ/TtwxYFndNLI/AAAAAAAABz4/Gh61C2BXIj0/s1600/mrt-logos.jpeg' width='150' height='75'/><center>" +
+            "<br><table> <tr><td><b>Date of purchased:</b></td><td>" + ViewBag.Datetime + "</td></tr>" +
+            "<tr><td><b>From - To:</b></td><td>" + ViewBag.Origin + " - " + ViewBag.Destination + "</td></tr>" +
+            "<tr><td><b>To - From:</b></td><td>" + ViewBag.displayReturn + "</td></tr>" +
+            "<tr><td><b>Ticket type:<b></td><td>" + ViewBag.TicketType + "</td></tr></table><br><hr witdh=200px>" +
+            " <table cellpadding='10' style ='border:1px solid lightgrey'><tr style='background-color:Gainsboro'><b>Quantity<b><td><b>Passenger's name</b></td><td><b>Ticket Fee</b></td><td><b>Total Fee</b></td></tr>" +
+            "<tr><td>" + ViewBag.Quantity + "</td><td>" + ViewBag.Name + "</td><td>RM" + ViewBag.Fare.ToString("0.00") + "</td><td>RM" + ViewBag.Total.ToString("0.00") + "</td></tr>" +
+            "</table><b>Payment:</b>Received.<br><hr witdh=200px> <br><b>Term and condition applied.</b><br>1.Ticket are not refundable.<br>2.Please show online purchase receipt on boarding.<br>3.All purchase are final.</body></html>"
+              );
+                @:<div class="roundedTextBox"> Thank you for purchase. Your purchase details has been submitted to your email at <span style="color:cadetblue">@ViewBag.Email</span></div>
+            }
+            catch (Exception ex)
+            {
+                @:<b>Sorry - we couldn't send the email to confirm your purchased.</b>
+                @ex
+            }
+
         }
-        catch (Exception)
-        {
-            @:<b>Sorry - we couldn't send the email to confirm your purchased.</b>
-        }
 
-    }
-
-    @Html.ActionLink("<< Return", null, null, null, new { href = Request.UrlReferrer })<br>
+        @Html.ActionLink("[Return]", null, null, null, new { href = Request.UrlReferrer })<br>
 
 
-
+    </div>
 </body>
 </html>
